@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import { Plus, X, Users, MapPin, Home } from 'lucide-react';
+import { useMembers } from './utils/zustand/useMembers';
+import { getLevelStyle, getLevelText } from './utils';
+import MemberCard from './components/MemberCard';
 
+const EmptyMember: NewMember = {
+  name: "",
+  gender: "",
+  level: 1,
+}
 const BadmintonApp = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [showMemberModal, setShowMemberModal] = useState(false);
@@ -14,34 +22,18 @@ const BadmintonApp = () => {
     { id: 4, name: '場地 D', status: 'idle', players: [null, null, null, null] }
   ]);
 
-  // 所有成員名單 - 獨立管理，不受場地影響
-  const [members, setMembers] = useState([
-    { id: 1, name: '王小明', gender: 'male', level: 'intermediate' },
-    { id: 2, name: '李小美', gender: 'female', level: 'advanced' },
-    { id: 3, name: '張大華', gender: 'male', level: 'beginner' },
-    { id: 4, name: '陳小雯', gender: 'female', level: 'intermediate' },
-    { id: 5, name: '林志偉', gender: 'male', level: 'advanced' },
-    { id: 6, name: '黃大成', gender: 'male', level: 'intermediate' },
-    { id: 7, name: '劉小君', gender: 'female', level: 'beginner' },
-    { id: 8, name: '吳小華', gender: 'male', level: 'advanced' },
-    { id: 9, name: '鄭小玲', gender: 'female', level: 'intermediate' },
-    { id: 10, name: '趙大明', gender: 'male', level: 'beginner' },
-    { id: 11, name: '周小芳', gender: 'female', level: 'advanced' },
-    { id: 12, name: '許志強', gender: 'male', level: 'intermediate' }
-  ]);
+  
+  // 所有成員名單 - from zustand store
+  const { members, addMember: addMemberToStore } = useMembers();
 
-  const [newMember, setNewMember] = useState({ name: '', gender: '', level: '' });
+  const [newMember, setNewMember] = useState(EmptyMember);
   const [selectingSlot, setSelectingSlot] = useState(null); // { courtIndex, playerIndex }
 
   // 新增成員
   const addMember = () => {
     if (newMember.name && newMember.gender && newMember.level) {
-      const member = {
-        id: members.length + 1,
-        ...newMember
-      };
-      setMembers([...members, member]);
-      setNewMember({ name: '', gender: '', level: '' });
+      addMemberToStore(newMember);
+      setNewMember(EmptyMember);
       setShowMemberModal(false);
     }
   };
@@ -125,23 +117,7 @@ const BadmintonApp = () => {
     }
   };
 
-  const getLevelStyle = (level) => {
-    switch (level) {
-      case 'beginner': return 'bg-green-100 text-green-700';
-      case 'intermediate': return 'bg-yellow-100 text-yellow-700';
-      case 'advanced': return 'bg-red-100 text-red-700';
-      default: return 'bg-gray-100 text-gray-700';
-    }
-  };
 
-  const getLevelText = (level) => {
-    switch (level) {
-      case 'beginner': return '初級';
-      case 'intermediate': return '中級';
-      case 'advanced': return '高級';
-      default: return '未知';
-    }
-  };
 
   const getAvatarColor = (gender) => {
     return gender === 'female' 
@@ -165,7 +141,7 @@ const BadmintonApp = () => {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-gray-800">所有場地</h2>
               <button
-                className="bg-indigo-500 text-white px-4 py-2 rounded-full text-xs font-medium hover:bg-indigo-600 transition-colors flex items-center gap-1"
+                className="bg-indigo-500 text-white cursor-pointer px-4 py-2 rounded-full text-xs font-medium hover:bg-indigo-600 transition-colors flex items-center gap-1"
                 onClick={addCourt}
               >
                 <Plus size={14} />
@@ -185,7 +161,7 @@ const BadmintonApp = () => {
                       </div>
                     </div>
                     <button
-                      className="text-indigo-600 text-sm font-medium hover:text-indigo-700"
+                      className="text-indigo-600 text-sm font-medium hover:text-indigo-700 cursor-pointer"
                       onClick={() => {
                         setSelectedCourt(courtIndex);
                         setActiveTab('current');
@@ -237,29 +213,7 @@ const BadmintonApp = () => {
 
             <div className="space-y-2">
               {members.map((member) => (
-                <div 
-                  key={member.id} 
-                  className={`flex items-center p-3 bg-white border rounded-lg transition-all ${
-                    selectingSlot ? 'cursor-pointer hover:border-indigo-500 hover:bg-indigo-50' : 'border-gray-200'
-                  }`}
-                  onClick={() => selectingSlot && selectPlayer(member.name)}
-                >
-                  <div className={`w-10 h-10 rounded-full ${getAvatarColor(member.gender)} flex items-center justify-center text-white font-semibold text-sm mr-3`}>
-                    {member.name.charAt(0)}
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-semibold text-sm mb-1">{member.name}</div>
-                    <div className="flex gap-3 text-xs text-gray-600">
-                      <span>{member.gender === 'male' ? '男性' : '女性'}</span>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getLevelStyle(member.level)}`}>
-                        {getLevelText(member.level)}
-                      </span>
-                    </div>
-                  </div>
-                  {selectingSlot && (
-                    <div className="text-indigo-600 text-xs font-medium">選擇</div>
-                  )}
-                </div>
+                <MemberCard key={member.id} onClick={member => selectPlayer(member.name)} member={member} selectingSlot={selectingSlot} />
               ))}
             </div>
           </div>
@@ -397,8 +351,9 @@ const BadmintonApp = () => {
 
       {/* Add Member Modal */}
       {showMemberModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 w-80 mx-4">
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className='absolute top-0 left-0 right-0 bottom-0 bg-black opacity-50' />
+          <div className="bg-white rounded-2xl p-6 w-80 mx-4 z-1">
             <h3 className="text-lg font-semibold mb-5 text-center">新增成員</h3>
             
             <div className="space-y-4">
@@ -427,17 +382,15 @@ const BadmintonApp = () => {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">等級</label>
-                <select
-                  className="w-full p-3 border border-gray-300 rounded-lg text-sm bg-white"
+                <label className="block text-sm font-medium text-gray-700 mb-2">等級: {getLevelText(newMember.level)}</label>
+                <input
+                  type="range"
+                  min="1"
+                  max="18"
                   value={newMember.level}
-                  onChange={(e) => setNewMember({...newMember, level: e.target.value})}
-                >
-                  <option value="">請選擇等級</option>
-                  <option value="beginner">初級</option>
-                  <option value="intermediate">中級</option>
-                  <option value="advanced">高級</option>
-                </select>
+                  onChange={(e) => setNewMember({...newMember, level: parseInt(e.target.value, 10)})}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                />
               </div>
             </div>
 
