@@ -9,38 +9,75 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as MembersRouteImport } from './routes/members'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CourtsIndexRouteImport } from './routes/courts/index'
+import { Route as CourtsCourt_idRouteImport } from './routes/courts/$court_id'
 
+const MembersRoute = MembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CourtsIndexRoute = CourtsIndexRouteImport.update({
+  id: '/courts/',
+  path: '/courts/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CourtsCourt_idRoute = CourtsCourt_idRouteImport.update({
+  id: '/courts/$court_id',
+  path: '/courts/$court_id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/members': typeof MembersRoute
+  '/courts/$court_id': typeof CourtsCourt_idRoute
+  '/courts': typeof CourtsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/members': typeof MembersRoute
+  '/courts/$court_id': typeof CourtsCourt_idRoute
+  '/courts': typeof CourtsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/members': typeof MembersRoute
+  '/courts/$court_id': typeof CourtsCourt_idRoute
+  '/courts/': typeof CourtsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/members' | '/courts/$court_id' | '/courts'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/members' | '/courts/$court_id' | '/courts'
+  id: '__root__' | '/' | '/members' | '/courts/$court_id' | '/courts/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MembersRoute: typeof MembersRoute
+  CourtsCourt_idRoute: typeof CourtsCourt_idRoute
+  CourtsIndexRoute: typeof CourtsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/members': {
+      id: '/members'
+      path: '/members'
+      fullPath: '/members'
+      preLoaderRoute: typeof MembersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +85,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/courts/': {
+      id: '/courts/'
+      path: '/courts'
+      fullPath: '/courts'
+      preLoaderRoute: typeof CourtsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/courts/$court_id': {
+      id: '/courts/$court_id'
+      path: '/courts/$court_id'
+      fullPath: '/courts/$court_id'
+      preLoaderRoute: typeof CourtsCourt_idRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MembersRoute: MembersRoute,
+  CourtsCourt_idRoute: CourtsCourt_idRoute,
+  CourtsIndexRoute: CourtsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

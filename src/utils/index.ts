@@ -45,3 +45,32 @@ export const getAvatarColor = (gender: string) => {
     ? 'bg-gradient-to-br from-pink-400 to-pink-600' 
     : 'bg-gradient-to-br from-blue-400 to-blue-600';
 };
+
+export const getMemberStatusText = (status: Member['status']) => {
+  switch (status) {
+    case "idle":
+      return "發呆"
+    case "playing":
+      return "場上"
+    case "blocked":
+      return "不打"
+  }
+}
+
+export const getStatusColor = (status: Court['status']) => {
+  switch (status) {
+    case 'playing': return 'bg-green-500';
+    case 'waiting': return 'bg-yellow-500';
+    case 'idle': return 'bg-gray-400';
+    default: return 'bg-gray-400';
+  }
+};
+
+export const getStatusText = (status: Court['status']) => {
+  switch (status) {
+    case 'playing': return '進行中';
+    case 'waiting': return '等待中';
+    case 'idle': return '空閒';
+    default: return '未知';
+  }
+};
