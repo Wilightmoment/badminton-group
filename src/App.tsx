@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Plus, X, Users, MapPin, Home } from 'lucide-react';
 
 const BadmintonApp = () => {
