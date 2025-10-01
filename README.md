@@ -1,73 +1,77 @@
-# React + TypeScript + Vite
+# 羽球分組助手 (Badminton Grouping Helper)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+一個方便、快速的羽球分組工具，幫助您輕鬆管理場地、成員，並進行智能分組，享受公平競技的樂趣。本應用程式專為手機和平板設計，並支援 PWA，可安裝至主畫面以獲得更佳體驗。
 
-Currently, two official plugins are available:
+## ✨ 主要功能
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 🏸 場地管理 (Court Management)
 
-## React Compiler
+-   **新增/刪除場地**: 可動態新增或刪除羽球場地。
+-   **場地狀態顯示**: 每個場地會清楚顯示「進行中 (playing)」、「等待中 (waiting)」、「閒置 (idle)」三種狀態。
+-   **自動化狀態更新**: 場地狀態會根據場上人數自動更新。無人時為 `idle`，有人但未開賽時為 `waiting`。
+-   **比賽生命週期**:
+    -   **開始比賽**: 在場地滿四人後，可手動開始比賽，場地狀態轉為 `playing`。
+    -   **暫停比賽**: 可將 `playing` 狀態的比賽暫停，狀態轉回 `waiting`。
+    -   **結束比賽**: 結束進行中的比賽，此時會自動結算球員的上場次數、更新最後下場時間，並清空場地。
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 👥 成員管理 (Member Management)
 
-## Expanding the ESLint configuration
+-   **新增/編輯/刪除成員**: 完整的成員 CRUD 功能。
+-   **成員狀態**:
+    -   `idle`: 閒置中，可被分派至任何場地。
+    -   `playing`: 正在比賽中。
+    -   `blocked`: 暫時禁止上場，分組時會被忽略。
+-   **點擊鎖定**: 在成員列表頁，點擊成員卡片可快速切換其 `blocked` / `idle` 狀態。
+-   **數據統計**:
+    -   **上場次數**: 自動記錄每個成員的上場次數。
+    -   **最後下場時間**: 記錄成員每次打完球的時間點，作為隨機分組的權重之一。
+    -   **一鍵清除**: 可一鍵清除所有成員的上場次數與最後下場時間記錄。
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🤖 智能分組 (Smart Grouping)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+-   **隨機加權演算法**: 分組並非完全隨機，而是基於以下權重，確保公平性：
+    1.  **等待時間**: 等待越久的玩家，有越高的機率被選中。
+    2.  **上場次數**: 上場次數越少的玩家，有越高的機率被選中。
+-   **組間實力平衡**: 在產生多組時，演算法會嘗試交換成員，使得各組之間的平均等級（實力）差距最小化。
+-   **組內實力平衡**: 在單一場地的四位玩家中，會自動將最強的與最弱的配成一隊，剩下兩位在另一隊，讓兩隊實力相當。
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 🚀 便利操作 (Convenient Operations)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+-   **懸浮按鈕 (FAB)**: 畫面上提供一個可拖曳的懸浮按鈕，點開後有兩個快捷功能：
+    1.  **補滿空位**: 自動使用加權演算法，從閒置玩家中挑選人補滿所有未滿的場地。
+    2.  **一鍵開始/結束**:
+        -   若無任何比賽進行中，此按鈕為「一鍵開始」，會將所有已滿員且等待中的場地全部開始比賽。
+        -   若有任何比賽正在進行，此按鈕變為「一鍵結束」，可一次結束所有進行中的比賽。
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 📱 行動裝置體驗 (Mobile Experience)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+-   **PWA Ready**: 支援 "Add to Home Screen"，提供類似原生 App 的體驗。
+-   **禁止縮放**: 頁面已設定為不可縮放，以確保在手機上的操作穩定性。
+-   **響應式設計**: 所有介面皆為行動裝置優先設計。
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🚀 如何使用
+
+1.  **前往成員頁**: 點擊下方導航欄的「成員」分頁。
+2.  **新增成員**: 點擊右上角的「新增」按鈕，輸入成員的姓名、性別與等級。
+3.  **前往場地頁**: 點擊下方導航欄的「場地」分頁。
+4.  **新增場地**: 點擊右上角的「新增場地」按鈕來建立比賽場地。
+5.  **分派球員**:
+    -   點擊場地卡片上的「詳細 →」進入場地細節頁。
+    -   點擊「+ 選擇球員」來從閒置成員中挑選玩家。
+    -   或使用「隨機分組」按鈕，讓系統自動為該場地分配四名玩家並平衡隊伍。
+6.  **開始比賽**:
+    -   在場地細節頁，當四名玩家到齊後，點擊「開始比賽」。
+    -   或在場地列表頁，使用懸浮按鈕的「一鍵開始」功能。
+7.  **結束比賽**:
+    -   在場地細節頁，點擊「結束比賽」。
+    -   或使用懸浮按鈕的「一鍵結束」功能。
+8.  **使用快捷功能**: 隨時可拖動畫面右下角的懸浮按鈕，使用「補滿空位」或「一鍵開始/結束」等功能，加速流程。
+
+## 🛠️ 技術棧
+
+-   **前端框架**: React
+-   **建構工具**: Vite
+-   **狀態管理**: Zustand (with `persist` middleware)
+-   **路由**: Tanstack Router
+-   **樣式**: Tailwind CSS
+-   **TypeScript**
