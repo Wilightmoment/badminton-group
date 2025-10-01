@@ -10,8 +10,9 @@ import {
 import { routeTree } from "./routeTree.gen";
 import "./index.css";
 
+const history = createHashHistory();
 // Create a new router instance
-const router = createRouter({ routeTree, history: createHashHistory() });
+const router = createRouter({ routeTree, history, });
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {

@@ -6,12 +6,21 @@ import { useCourts } from "@/utils/zustand/useCourts";
 import SelectMemberDialog from "@/components/Dialog/SelectMemberDialog";
 import { getStatusColor, getStatusText, getLevelText } from "@/utils";
 
-export const Route = createFileRoute("/courts/$court_id")({
+type DetailSearch = {
+  court_id: number
+}
+export const Route = createFileRoute('/courts/detail')({
   component: RouteComponent,
-});
+  validateSearch: (search: Record<string, unknown>): DetailSearch => {
+    // validate and parse the search params into a typed state
+    return {
+      court_id: Number(search?.court_id ?? 1),
+    }
+  },
+})
 
 function RouteComponent() {
-  const courtId = Route.useParams().court_id;
+  const courtId = Route.useSearch().court_id;
   const navigate = Route.useNavigate();
   const [isSelectMemberDialogOpen, setIsSelectMemberDialogOpen] = useState(false);
   const [selectingSlot, setSelectingSlot] = useState<{ playerIndex: number } | null>(null);
@@ -25,7 +34,7 @@ function RouteComponent() {
     pauseGame,
     endGame,
   } = useCourts();
-  const selectedCourtIndex = courts.findIndex(court => court.id === Number(courtId))
+  const selectedCourtIndex = courts.findIndex(court => court.id === courtId)
   const selectedCourt = courts[selectedCourtIndex]
 
   const handleOpenSelectMemberDialog = (playerIndex: number) => {

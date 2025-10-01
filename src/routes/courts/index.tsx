@@ -93,8 +93,8 @@ function RouteComponent() {
                   className="text-indigo-600 text-md font-medium hover:text-indigo-700 cursor-pointer"
                   onClick={() => {
                     navigate({
-                      to: "/courts/$court_id",
-                      params: { court_id: court.id.toString() },
+                      to: "/courts/detail",
+                      search: { court_id: court.id },
                     });
                   }}
                 >
