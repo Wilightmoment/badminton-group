@@ -293,6 +293,63 @@ export const useCourts = create<CourtsState>()(
           return { courts: updatedCourts };
         });
       },
+      startAllReadyCourts: () => {
+        const { updateMembersStatus } = useMembers.getState();
+        set((state) => {
+          const updatedCourts: Court[] = JSON.parse(
+            JSON.stringify(state.courts)
+          );
+          const playerIdsToStart: number[] = [];
+
+          updatedCourts.forEach((court) => {
+            const playerCount = court.players.filter((p) => p !== null).length;
+            if (court.status === "waiting" && playerCount === 4) {
+              court.status = "playing";
+              const playerIds = court.players.map((p) => p!.id);
+              playerIdsToStart.push(...playerIds);
+            }
+          });
+
+          if (playerIdsToStart.length > 0) {
+            updateMembersStatus(playerIdsToStart, "playing");
+          }
+
+          return { courts: updatedCourts };
+        });
+      },
+      endAllPlayingCourts: () => {
+        const {
+          incrementPlayedTimes,
+          updateMembersStatus,
+          updateLastPlayedAt,
+        } = useMembers.getState();
+        set((state) => {
+          const updatedCourts: Court[] = JSON.parse(
+            JSON.stringify(state.courts)
+          );
+          const playerIdsToEnd: number[] = [];
+
+          updatedCourts.forEach((court) => {
+            if (court.status === "playing") {
+              const playerIds = court.players
+                .filter((p): p is Member => p !== null)
+                .map((p: Member) => p.id);
+
+              playerIdsToEnd.push(...playerIds);
+              court.players = [null, null, null, null];
+              court.status = "idle";
+            }
+          });
+
+          if (playerIdsToEnd.length > 0) {
+            incrementPlayedTimes(playerIdsToEnd);
+            updateMembersStatus(playerIdsToEnd, "idle");
+            updateLastPlayedAt(playerIdsToEnd);
+          }
+
+          return { courts: updatedCourts };
+        });
+      },
     }),
     {
       name: "courts-storage",

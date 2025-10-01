@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Plus, Trash2, Shuffle } from "lucide-react";
+import { Plus, Trash2, Shuffle, Play, Square } from "lucide-react";
 
 import { useCourts } from "@/utils/zustand/useCourts";
 import { getStatusColor, getStatusText } from "@/utils";
+import DraggableFAB from "@/components/DraggableFAB";
 
 export const Route = createFileRoute("/courts/")({
   component: RouteComponent,
@@ -10,29 +11,53 @@ export const Route = createFileRoute("/courts/")({
 
 function RouteComponent() {
   const navigate = Route.useNavigate();
+  const {
+    courts,
+    fillIncompleteCourts,
+    startAllReadyCourts,
+    endAllPlayingCourts,
+    addCourt,
+    removeCourt,
+  } = useCourts();
 
-  // 場地狀態 - from zustand store
-  const { courts, addCourt, removeCourt, fillIncompleteCourts } = useCourts();
-
+  const isAnyCourtPlaying = courts.some((court) => court.status === "playing");
+  const fabActions = [
+    {
+      label: "補滿空位",
+      icon: <Shuffle size={24} />,
+      onClick: fillIncompleteCourts,
+    },
+    isAnyCourtPlaying
+      ? {
+          label: "一鍵結束",
+          icon: <Square size={24} />,
+          onClick: endAllPlayingCourts,
+        }
+      : {
+          label: "一鍵開始",
+          icon: <Play size={24} />,
+          onClick: startAllReadyCourts,
+        },
+  ];
   return (
     <div className="p-5">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-gray-800">所有場地</h2>
         <div className="flex gap-2">
-            <button
-                className="bg-green-500 text-white cursor-pointer px-4 py-2 rounded-full text-md font-medium hover:bg-green-600 transition-colors flex items-center gap-1"
-                onClick={fillIncompleteCourts}
-            >
-                <Shuffle size={14} />
-                補滿空位
-            </button>
-            <button
-                className="bg-indigo-500 text-white cursor-pointer px-4 py-2 rounded-full text-md font-medium hover:bg-indigo-600 transition-colors flex items-center gap-1"
-                onClick={addCourt}
-            >
-                <Plus size={14} />
-                新增場地
-            </button>
+          {/* <button
+            className="bg-green-500 text-white cursor-pointer px-4 py-2 rounded-full text-md font-medium hover:bg-green-600 transition-colors flex items-center gap-1"
+            onClick={fillIncompleteCourts}
+          >
+            <Shuffle size={14} />
+            補滿空位
+          </button> */}
+          <button
+            className="bg-indigo-500 text-white cursor-pointer px-4 py-2 rounded-full text-md font-medium hover:bg-indigo-600 transition-colors flex items-center gap-1"
+            onClick={addCourt}
+          >
+            <Plus size={14} />
+            新增場地
+          </button>
         </div>
       </div>
 
@@ -58,22 +83,22 @@ function RouteComponent() {
               </div>
               <div className="flex items-center">
                 <button
-                    className="p-2 text-gray-400 hover:text-red-600 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                    onClick={() => removeCourt(court.id)}
-                    disabled={court.status === 'playing'}
+                  className="p-2 text-gray-400 hover:text-red-600 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => removeCourt(court.id)}
+                  disabled={court.status === "playing"}
                 >
-                    <Trash2 size={20} />
+                  <Trash2 size={20} />
                 </button>
                 <button
-                    className="text-indigo-600 text-md font-medium hover:text-indigo-700 cursor-pointer"
-                    onClick={() => {
+                  className="text-indigo-600 text-md font-medium hover:text-indigo-700 cursor-pointer"
+                  onClick={() => {
                     navigate({
-                        to: "/courts/$court_id",
-                        params: { court_id: court.id.toString() },
+                      to: "/courts/$court_id",
+                      params: { court_id: court.id.toString() },
                     });
-                    }}
+                  }}
                 >
-                    詳細 →
+                  詳細 →
                 </button>
               </div>
             </div>
@@ -113,6 +138,7 @@ function RouteComponent() {
           </div>
         ))}
       </div>
+      <DraggableFAB actions={fabActions} />
     </div>
   );
 }

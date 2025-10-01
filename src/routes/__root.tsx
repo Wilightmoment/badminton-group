@@ -2,10 +2,6 @@ import * as React from "react";
 import { Outlet, createRootRoute } from "@tanstack/react-router";
 import { Users, Home } from "lucide-react";
 import { useLocation } from "@tanstack/react-router";
-import { Shuffle, Play } from "lucide-react";
-
-import DraggableFAB from "@/components/DraggableFAB";
-import { useCourts } from "@/utils/zustand/useCourts";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -14,21 +10,7 @@ export const Route = createRootRoute({
 function RootComponent() {
   const location = useLocation();
   const navigation = Route.useNavigate();
-  const { fillIncompleteCourts } = useCourts();
-  const fabActions = [
-    {
-      label: "補滿空位",
-      icon: <Shuffle size={24} />,
-      onClick: fillIncompleteCourts,
-    },
-    {
-      label: "一鍵開始",
-      icon: <Play size={24} />,
-      onClick: () => {
-        alert("此功能尚未實作");
-      },
-    },
-  ];
+
   return (
     <React.Fragment>
       <div className="max-w-xl mx-auto bg-gray-50 min-h-screen shadow-xl relative pb-20">
@@ -39,7 +21,6 @@ function RootComponent() {
 
         <div className="min-h-[calc(100vh-200px)] pb-4">
           <Outlet />
-          <DraggableFAB actions={fabActions} />
         </div>
         {/* Bottom Navigation */}
         <div className="fixed bottom-0 left-0 right-0 max-w-xl mx-auto bg-white border-t border-gray-200 shadow-lg">

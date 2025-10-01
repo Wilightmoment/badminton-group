@@ -28,4 +28,6 @@ type CourtsState = {
   startGame: (courtIndex: number) => void;
   pauseGame: (courtIndex: number) => void;
   endGame: (courtIndex: number) => void;
+  startAllReadyCourts: () => void;
+  endAllPlayingCourts: () => void;
 };
