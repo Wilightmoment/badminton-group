@@ -1,8 +1,7 @@
-import React from 'react';
-import Dialog from './index';
-import MemberCard from '../MemberCard';
-import { useMembers } from '@/utils/zustand/useMembers';
-import { useCourts } from '@/utils/zustand/useCourts';
+import Dialog from "./index";
+import MemberCard from "../MemberCard";
+import { useMembers } from "@/utils/zustand/useMembers";
+import { useCourts } from "@/utils/zustand/useCourts";
 
 type Props = {
   open: boolean;
@@ -10,17 +9,21 @@ type Props = {
   onSelectMember: (member: Member) => void;
 };
 
-export default function SelectMemberDialog({ open, onOpenChange, onSelectMember }: Props) {
+export default function SelectMemberDialog({
+  open,
+  onOpenChange,
+  onSelectMember,
+}: Props) {
   const { members } = useMembers();
   const { courts } = useCourts();
 
   const onCourtPlayerIds = courts
-    .flatMap(court => court.players)
+    .flatMap((court) => court.players)
     .filter((player): player is Member => player !== null)
-    .map(player => player.id);
+    .map((player) => player.id);
 
   const availableMembers = members.filter(
-    m => m.status === 'idle' && !onCourtPlayerIds.includes(m.id)
+    (m) => m.status === "idle" && !onCourtPlayerIds.includes(m.id)
   );
 
   const handleSelect = (member: Member) => {
@@ -29,11 +32,7 @@ export default function SelectMemberDialog({ open, onOpenChange, onSelectMember 
   };
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onOpenChange}
-      showFooter={false}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange} showFooter={false}>
       <h3 className="text-lg font-semibold mb-5 text-center">選擇成員</h3>
       <div className="space-y-2 max-h-[60vh] overflow-y-auto">
         {availableMembers.length > 0 ? (
