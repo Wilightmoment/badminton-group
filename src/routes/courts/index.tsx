@@ -52,7 +52,7 @@ function RouteComponent() {
             補滿空位
           </button> */}
           <button
-            className="bg-indigo-500 text-white cursor-pointer px-4 py-2 rounded-full text-md font-medium hover:bg-indigo-600 transition-colors flex items-center gap-1"
+            className="bg-indigo-500 cursor-pointer text-white px-3 py-2 rounded-full text-sm font-medium hover:bg-indigo-600 transition-colors items-center flex"
             onClick={addCourt}
           >
             <Plus size={14} />
