@@ -74,7 +74,15 @@ export const useCourts = create<CourtsState>()(
               updateMembersStatus(playerIds, "idle");
             }
           }
-          return { courts: state.courts.filter((c) => c.id !== courtId) };
+          
+          const remainingCourts = state.courts.filter((c) => c.id !== courtId);
+          
+          const updatedCourts = remainingCourts.map((court, index) => ({
+              ...court,
+              name: `場地 ${String.fromCharCode(65 + index)}`
+          }));
+
+          return { courts: updatedCourts };
         });
       },
       removePlayer: (courtIndex, playerIndex) => {
