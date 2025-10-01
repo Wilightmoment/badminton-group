@@ -9,45 +9,10 @@ import {
   COUNT_WEIGHT_RATIO,
 } from "../randomGroup";
 
-// Get initial members from useMembers store to build initial court state
-const initialMembers = useMembers.getState().members;
-const findMember = (name: string): Member | null =>
-  initialMembers.find((m) => m.name === name) || null;
-
 export const useCourts = create<CourtsState>()(
   persist(
     (set) => ({
-      courts: [
-        {
-          id: 1,
-          name: "場地 A",
-          status: "waiting",
-          players: [
-            findMember("王小明"),
-            findMember("李小美"),
-            findMember("張大華"),
-            findMember("陳小雯"),
-          ],
-        },
-        {
-          id: 2,
-          name: "場地 B",
-          status: "waiting",
-          players: [findMember("林志偉"), null, findMember("黃大成"), null],
-        },
-        {
-          id: 3,
-          name: "場地 C",
-          status: "idle",
-          players: [null, null, null, null],
-        },
-        {
-          id: 4,
-          name: "場地 D",
-          status: "idle",
-          players: [null, null, null, null],
-        },
-      ],
+      courts: [],
       addCourt: () => {
         set((state) => {
           const newCourt: Court = {
@@ -74,12 +39,12 @@ export const useCourts = create<CourtsState>()(
               updateMembersStatus(playerIds, "idle");
             }
           }
-          
+
           const remainingCourts = state.courts.filter((c) => c.id !== courtId);
-          
+
           const updatedCourts = remainingCourts.map((court, index) => ({
-              ...court,
-              name: `場地 ${String.fromCharCode(65 + index)}`
+            ...court,
+            name: `場地 ${String.fromCharCode(65 + index)}`,
           }));
 
           return { courts: updatedCourts };

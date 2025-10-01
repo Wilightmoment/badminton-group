@@ -1,16 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { redirect } from "@tanstack/react-router";
-
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/404")({
   component: RouteComponent,
-  loader: () => {
-    return redirect({ to: "/courts" });
-  },
   beforeLoad: () => {
     return redirect({ to: "/courts" });
-  }
+  },
 });
 
 function RouteComponent() {
-  return <div />;
+  return <div></div>;
 }

@@ -5,8 +5,8 @@ import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import { resolve } from "path";
 
 // https://vite.dev/config/
-export default defineConfig({
-  base: "/badminton-group/",
+export default defineConfig(({ mode }) => ({
+  base: mode === "development" ? undefined : "/badminton-group/",
   plugins: [
     tanstackRouter({
       target: "react",
@@ -20,4 +20,4 @@ export default defineConfig({
       "@": resolve(__dirname, "./src"),
     },
   },
-});
+}));

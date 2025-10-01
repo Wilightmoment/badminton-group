@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MembersRouteImport } from './routes/members'
+import { Route as R404RouteImport } from './routes/404'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CourtsIndexRouteImport } from './routes/courts/index'
 import { Route as CourtsCourt_idRouteImport } from './routes/courts/$court_id'
@@ -17,6 +18,11 @@ import { Route as CourtsCourt_idRouteImport } from './routes/courts/$court_id'
 const MembersRoute = MembersRouteImport.update({
   id: '/members',
   path: '/members',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const R404Route = R404RouteImport.update({
+  id: '/404',
+  path: '/404',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,12 +43,14 @@ const CourtsCourt_idRoute = CourtsCourt_idRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/404': typeof R404Route
   '/members': typeof MembersRoute
   '/courts/$court_id': typeof CourtsCourt_idRoute
   '/courts': typeof CourtsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/404': typeof R404Route
   '/members': typeof MembersRoute
   '/courts/$court_id': typeof CourtsCourt_idRoute
   '/courts': typeof CourtsIndexRoute
@@ -50,20 +58,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/404': typeof R404Route
   '/members': typeof MembersRoute
   '/courts/$court_id': typeof CourtsCourt_idRoute
   '/courts/': typeof CourtsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/members' | '/courts/$court_id' | '/courts'
+  fullPaths: '/' | '/404' | '/members' | '/courts/$court_id' | '/courts'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/members' | '/courts/$court_id' | '/courts'
-  id: '__root__' | '/' | '/members' | '/courts/$court_id' | '/courts/'
+  to: '/' | '/404' | '/members' | '/courts/$court_id' | '/courts'
+  id: '__root__' | '/' | '/404' | '/members' | '/courts/$court_id' | '/courts/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  R404Route: typeof R404Route
   MembersRoute: typeof MembersRoute
   CourtsCourt_idRoute: typeof CourtsCourt_idRoute
   CourtsIndexRoute: typeof CourtsIndexRoute
@@ -76,6 +86,13 @@ declare module '@tanstack/react-router' {
       path: '/members'
       fullPath: '/members'
       preLoaderRoute: typeof MembersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/404': {
+      id: '/404'
+      path: '/404'
+      fullPath: '/404'
+      preLoaderRoute: typeof R404RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -104,6 +121,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  R404Route: R404Route,
   MembersRoute: MembersRoute,
   CourtsCourt_idRoute: CourtsCourt_idRoute,
   CourtsIndexRoute: CourtsIndexRoute,
