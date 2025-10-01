@@ -1,30 +1,22 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/badminton-group/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <link rel="manifest" href="/badminton-group/manifest.json" />
-    <title>羽球分組助手</title>
-
-    <!-- SEO & Social Media Meta Tags -->
-    <meta name="description" content="一個方便、快速的羽球分組工具，幫助您輕鬆管理場地、成員，並進行智能分組，享受公平競技的樂趣。" />
-    
-    <!-- Facebook Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="羽球分組助手">
-    <meta property="og:description" content="一個方便、快速的羽球分組工具，幫助您輕鬆管理場地、成員，並進行智能分組，享受公平競技的樂趣。">
-    <meta property="og:image" content="/badminton-group/favicon.png">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="羽球分組助手">
-    <meta name="twitter:description" content="一個方便、快速的羽球分組工具，幫助您輕鬆管理場地、成員，並進行智能分組，享受公平競技的樂趣。">
-    <meta name="twitter:image" content="/badminton-group/favicon.png">
-    <script type="module" crossorigin src="/badminton-group/assets/index-BLWcDwih.js"></script>
-    <link rel="stylesheet" crossorigin href="/badminton-group/assets/index-BalAV6ZC.css">
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+      // GitHub Pages 的 SPA 重定向解決方案
+      var pathSegmentsToKeep = 1; // 改成 1，因為有 /project-name
+      
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
+    </script>
   </head>
   <body>
-    <div id="root"></div>
   </body>
 </html>
