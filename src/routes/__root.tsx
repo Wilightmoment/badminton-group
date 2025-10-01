@@ -2,6 +2,7 @@ import * as React from "react";
 import { Outlet, createRootRoute } from "@tanstack/react-router";
 import { Users, Home } from "lucide-react";
 import { useLocation } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -10,6 +11,10 @@ export const Route = createRootRoute({
 function RootComponent() {
   const location = useLocation();
   const navigation = Route.useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
     <React.Fragment>
