@@ -14,7 +14,7 @@ type Props = {
 const DraggableFAB: React.FC<Props> = ({ actions }) => {
   const fabRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [position, setPosition] = useState({ x: 30, y: window.innerHeight - 150 });
+  const [position, setPosition] = useState({ x: window.innerWidth - 16 - 56, y: window.innerHeight - 150 });
   const [isDragging, setIsDragging] = useState(false);
   const [isSnapping, setIsSnapping] = useState(true);
 
