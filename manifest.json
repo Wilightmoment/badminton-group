@@ -1,0 +1,16 @@
+{
+  "name": "羽球分組助手",
+  "short_name": "羽球分組",
+  "description": "一個羽球分組的工具",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "any",
+      "type": "image/png+xml"
+    }
+  ]
+}
