@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Plus, Trash2, Shuffle, Play, Square } from "lucide-react";
+import { Plus, Trash2, Shuffle } from "lucide-react";
 
 import { useCourts } from "@/utils/zustand/useCourts";
 import { getStatusColor, getStatusText } from "@/utils";
-import DraggableFAB from "@/components/DraggableFAB";
+// import DraggableFAB from "@/components/DraggableFAB";
 
 export const Route = createFileRoute("/courts/")({
   component: RouteComponent,
@@ -14,43 +14,43 @@ function RouteComponent() {
   const {
     courts,
     fillIncompleteCourts,
-    startAllReadyCourts,
-    endAllPlayingCourts,
+    // startAllReadyCourts,
+    // endAllPlayingCourts,
     addCourt,
     removeCourt,
   } = useCourts();
 
-  const isAnyCourtPlaying = courts.some((court) => court.status === "playing");
-  const fabActions = [
-    {
-      label: "補滿空位",
-      icon: <Shuffle size={24} />,
-      onClick: fillIncompleteCourts,
-    },
-    isAnyCourtPlaying
-      ? {
-          label: "一鍵結束",
-          icon: <Square size={24} />,
-          onClick: endAllPlayingCourts,
-        }
-      : {
-          label: "一鍵開始",
-          icon: <Play size={24} />,
-          onClick: startAllReadyCourts,
-        },
-  ];
+  // const isAnyCourtPlaying = courts.some((court) => court.status === "playing");
+  // const fabActions = [
+  //   {
+  //     label: "補滿空位",
+  //     icon: <Shuffle size={24} />,
+  //     onClick: fillIncompleteCourts,
+  //   },
+  //   isAnyCourtPlaying
+  //     ? {
+  //         label: "一鍵結束",
+  //         icon: <Square size={24} />,
+  //         onClick: endAllPlayingCourts,
+  //       }
+  //     : {
+  //         label: "一鍵開始",
+  //         icon: <Play size={24} />,
+  //         onClick: startAllReadyCourts,
+  //       },
+  // ];
   return (
     <div className="p-5">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-gray-800">所有場地</h2>
         <div className="flex gap-2">
-          {/* <button
-            className="bg-green-500 text-white cursor-pointer px-4 py-2 rounded-full text-md font-medium hover:bg-green-600 transition-colors flex items-center gap-1"
+          <button
+            className="bg-green-500 text-white cursor-pointer px-3 py-2 rounded-full text-sm font-medium hover:bg-green-600 transition-colors flex items-center gap-1"
             onClick={fillIncompleteCourts}
           >
             <Shuffle size={14} />
             補滿空位
-          </button> */}
+          </button>
           <button
             className="bg-indigo-500 cursor-pointer text-white px-3 py-2 rounded-full text-sm font-medium hover:bg-indigo-600 transition-colors items-center flex"
             onClick={addCourt}
@@ -138,7 +138,7 @@ function RouteComponent() {
           </div>
         ))}
       </div>
-      <DraggableFAB actions={fabActions} />
+      {/* <DraggableFAB actions={fabActions} /> */}
     </div>
   );
 }
